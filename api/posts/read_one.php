@@ -13,7 +13,20 @@ $db = $database->connect();
 // Instantiate Blog Post Object
 $post = new Post($db);
 
-$post->id = isset($__GET['id']) ? $_GET['id'] : exit("Please Provide ID");
+$post->id = isset($_GET['id']) ? $_GET['id'] : exit("Please Provide ID");
 
 // Get Post
-$result = $post->read_one();
+$post->read_one();
+
+// Create Array
+$post_arr = array(
+  'id' => $post->id,
+  'title' => $post->title,
+  'body' => $post->body,
+  'author' => $post->author,
+  'category_id' => $post->category_id,
+  'category_name' => $post->category_name,
+);
+
+// Convert to JSON
+print_r(json_encode($post_arr));

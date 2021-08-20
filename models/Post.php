@@ -72,4 +72,98 @@ class Post
     $this->category_id = $row['category_id'];
     $this->category_name = $row['category_name'];
   }
+
+  // Create new Post
+  public function create()
+  {
+    $query = 'INSERT INTO ' . $this->table . ' SET 
+              title = :title,
+              body = :body,
+              author = :author,
+              category_id = :category_id';
+    $stmt = $this->conn->prepare($query);
+
+    // Sanitize Data
+    $this->title = htmlspecialchars(strip_tags($this->title));
+    $this->body = htmlspecialchars(strip_tags($this->body));
+    $this->author = htmlspecialchars(strip_tags($this->author));
+    $this->category_id = htmlspecialchars(strip_tags($this->category_id));
+
+    // Bind data params
+    $stmt->bindParam(':title', $this->title);
+    $stmt->bindParam(':body', $this->body);
+    $stmt->bindParam(':author', $this->author);
+    $stmt->bindParam(':category_id', $this->category_id);
+
+    // Execute Query
+    if ($stmt->execute()) {
+      return true;
+    } else {
+      // Print error if failed
+      printf("Error: %s.\n", $stmt->err);
+      return false;
+    }
+  }
+
+  // Update Post by ID
+
+  public function update()
+  {
+    $query = 'UPDATE ' . $this->table . ' SET 
+              title = :title,
+              body = :body,
+              author = :author,
+              category_id = :category_id
+              WHERE id = :id';
+
+    $stmt = $this->conn->prepare($query);
+
+    // Sanitize Data
+    $this->title = htmlspecialchars(strip_tags($this->title));
+    $this->body = htmlspecialchars(strip_tags($this->body));
+    $this->author = htmlspecialchars(strip_tags($this->author));
+    $this->category_id = htmlspecialchars(strip_tags($this->category_id));
+    $this->id = htmlspecialchars(strip_tags($this->id));
+
+    // Bind data params
+    $stmt->bindParam(':id', $this->id);
+    $stmt->bindParam(':title', $this->title);
+    $stmt->bindParam(':body', $this->body);
+    $stmt->bindParam(':author', $this->author);
+    $stmt->bindParam(':category_id', $this->category_id);
+
+    // Execute Query
+    if ($stmt->execute()) {
+      return true;
+    } else {
+      // Print error if failed
+      printf("Error: %s.\n", $stmt->err);
+      return false;
+    }
+  }
+
+  // Delete
+  public function delete()
+  {
+    $query = 'DELETE FROM ' . $this->table . ' 
+              WHERE id = :id';
+
+    // Prepare query statement
+    $stmt = $this->conn->prepare($query);
+
+    // Sanitize ID input
+    $this->id = htmlspecialchars(strip_tags($this->id));
+
+    // Bind data params
+    $stmt->bindParam(':id', $this->id);
+
+    // Execute Query
+    if ($stmt->execute()) {
+      return true;
+    } else {
+      // Print error if failed
+      printf("Error: %s.\n", $stmt->err);
+      return false;
+    }
+  }
 }
