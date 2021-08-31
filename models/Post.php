@@ -37,6 +37,8 @@ class Post
               ORDER BY p.created_at DESC';
     // Prepare statement
     $stmt = $this->conn->prepare($query);
+
+    // Execute Statement
     $stmt->execute();
 
     return $stmt;
@@ -57,9 +59,14 @@ class Post
               LEFT JOIN categories c ON p.category_id = c.id
               WHERE p.id = ?
               LIMIT 0,1';
+              
     // Prepare statement
     $stmt = $this->conn->prepare($query);
+
+    // Bind data Params
     $stmt->bindParam(1, $this->id);
+
+    // Execute Statement
     $stmt->execute();
 
 
